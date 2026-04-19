@@ -313,6 +313,90 @@ footer{background:#080F1A;padding:96px 128px 64px}
   .hero-acts{flex-direction:column;align-items:flex-start}
   .ft-bot{flex-direction:column;gap:12px;text-align:center}
 }
+
+/* ══ MODAL ══ */
+.modal-overlay{position:fixed;inset:0;background:rgba(12,26,46,.7);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);z-index:2000;display:flex;align-items:center;justify-content:center;padding:24px;opacity:0;pointer-events:none;transition:opacity .35s var(--ease-out)}
+.modal-overlay.open{opacity:1;pointer-events:all}
+.modal{background:var(--surface-pure);border-radius:32px;width:100%;max-width:760px;max-height:90vh;overflow-y:auto;box-shadow:0 48px 120px rgba(12,26,46,.25);transform:translateY(24px) scale(.98);transition:transform .4s var(--ease-out);position:relative}
+.modal-overlay.open .modal{transform:translateY(0) scale(1)}
+.modal-head{padding:40px 48px 0;display:flex;align-items:flex-start;justify-content:space-between}
+.modal-title{font-family:var(--display);font-size:32px;font-weight:400;color:var(--ink);line-height:1.2}
+.modal-title em{font-style:italic;color:var(--ink-60)}
+.modal-close{width:40px;height:40px;border-radius:50%;background:var(--sand);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--ink-60);flex-shrink:0;transition:all .2s}
+.modal-close:hover{background:var(--ink-10);color:var(--ink)}
+.modal-body{padding:32px 48px 48px}
+
+/* Steps */
+.modal-steps{display:flex;align-items:center;gap:8px;margin-bottom:36px}
+.mstep{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:600;color:var(--ink-30);letter-spacing:.5px}
+.mstep.active{color:var(--ink)}
+.mstep-num{width:28px;height:28px;border-radius:50%;background:var(--ink-10);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;transition:all .3s}
+.mstep.active .mstep-num{background:var(--ink);color:#fff}
+.mstep.done .mstep-num{background:var(--green);color:#fff}
+.mstep-sep{flex:1;height:1px;background:var(--ink-10);max-width:60px}
+
+/* Plan cards in modal */
+.mplans{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:8px}
+.mplan{border:2px solid var(--ink-10);border-radius:20px;padding:24px 20px;cursor:pointer;transition:all .25s;position:relative;background:var(--surface-pure)}
+.mplan:hover{border-color:var(--ink-30);transform:translateY(-2px);box-shadow:var(--sh-sm)}
+.mplan.selected{border-color:var(--ink);background:var(--ink)}
+.mplan-tier{font-size:10px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--blue);margin-bottom:6px}
+.mplan.selected .mplan-tier{color:var(--blue-light)}
+.mplan-name{font-family:var(--display);font-size:18px;font-weight:400;color:var(--ink);margin-bottom:12px}
+.mplan.selected .mplan-name{color:#fff}
+.mplan-price{font-family:var(--display);font-size:28px;font-weight:500;color:var(--ink);line-height:1}
+.mplan.selected .mplan-price{color:#fff}
+.mplan-per{font-size:12px;color:var(--ink-60)}
+.mplan.selected .mplan-per{color:rgba(255,255,255,.5)}
+.mplan-pop{position:absolute;top:-11px;left:50%;transform:translateX(-50%);background:var(--green);color:#fff;font-size:9px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;padding:4px 14px;border-radius:100px;white-space:nowrap}
+.mplan-check{position:absolute;top:16px;right:16px;width:22px;height:22px;border-radius:50%;background:var(--green);display:none;align-items:center;justify-content:center;color:#fff}
+.mplan.selected .mplan-check{display:flex}
+
+/* Color picker */
+.color-section{margin-bottom:8px}
+.color-label{font-size:13px;font-weight:700;color:var(--ink-60);letter-spacing:.5px;text-transform:uppercase;margin-bottom:16px}
+.color-grid{display:flex;gap:12px;flex-wrap:wrap}
+.color-opt{width:52px;height:52px;border-radius:50%;cursor:pointer;border:3px solid transparent;transition:all .25s;position:relative;box-shadow:var(--sh-sm)}
+.color-opt:hover{transform:scale(1.1)}
+.color-opt.selected{border-color:var(--ink);transform:scale(1.1)}
+.color-opt.selected::after{content:'✓';position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.3)}
+.color-name{font-size:12px;color:var(--ink-60);text-align:center;margin-top:6px;font-weight:500}
+.color-item{display:flex;flex-direction:column;align-items:center;gap:0}
+
+/* Summary bar */
+.modal-summary{background:var(--sand);border-radius:16px;padding:20px 24px;margin-bottom:24px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.summary-part{display:flex;align-items:center;gap:10px}
+.summary-dot{width:10px;height:10px;border-radius:50%;background:var(--green);flex-shrink:0}
+.summary-label{font-size:12px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;color:var(--ink-60)}
+.summary-val{font-size:14px;font-weight:700;color:var(--ink)}
+.summary-color-preview{width:20px;height:20px;border-radius:50%;border:2px solid rgba(0,0,0,.1);flex-shrink:0}
+
+/* Modal footer */
+.modal-footer{display:flex;gap:12px}
+.btn-confirm{flex:1;padding:18px;background:var(--ink);color:#fff;font-family:var(--sans);font-size:15px;font-weight:700;border:none;border-radius:14px;cursor:pointer;transition:all .3s;display:flex;align-items:center;justify-content:center;gap:10px}
+.btn-confirm:hover{background:#1a3154;transform:translateY(-1px);box-shadow:var(--sh-lg)}
+.btn-confirm:disabled{background:var(--ink-30);cursor:not-allowed;transform:none;box-shadow:none}
+.btn-modal-back{padding:18px 24px;background:transparent;color:var(--ink-60);font-family:var(--sans);font-size:14px;font-weight:600;border:1.5px solid var(--ink-10);border-radius:14px;cursor:pointer;transition:all .3s}
+.btn-modal-back:hover{border-color:var(--ink-30);color:var(--ink)}
+
+/* Success step */
+.modal-success{text-align:center;padding:16px 0}
+.success-icon{width:72px;height:72px;background:var(--green-subtle);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 24px;color:var(--green)}
+.success-title{font-family:var(--display);font-size:28px;font-weight:500;color:var(--ink);margin-bottom:12px}
+.success-sub{font-size:16px;color:var(--ink-60);line-height:1.7;margin-bottom:32px}
+.success-recap{background:var(--sand);border-radius:16px;padding:20px 24px;margin-bottom:32px;text-align:left}
+.recap-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--sand-dark);font-size:14px}
+.recap-row:last-child{border:none}
+.recap-row span:first-child{color:var(--ink-60)}
+.recap-row span:last-child{font-weight:700;color:var(--ink)}
+
+@media(max-width:640px){
+  .modal-head,.modal-body{padding-left:24px;padding-right:24px}
+  .modal-head{padding-top:28px}
+  .mplans{grid-template-columns:1fr}
+  .modal-title{font-size:26px}
+  .modal-footer{flex-direction:column}
+}
 </style>
 </head>
 <body>
@@ -329,7 +413,7 @@ footer{background:#080F1A;padding:96px 128px 64px}
     <li><a href="#abonnement">Abonnement</a></li>
   </ul>
   <div class="nav-right">
-    <a href="#abonnement" class="nav-btn">S'abonner</a>
+    <a href="#" class="nav-btn" data-modal data-plan="">S'abonner</a>
   </div>
   <button class="nav-toggle" id="navTog" aria-label="Menu">
     <span></span><span></span><span></span>
@@ -349,7 +433,7 @@ footer{background:#080F1A;padding:96px 128px 64px}
       <h1>L'hygiène<br>dentaire,<br><em>réinventée.</em></h1>
       <p class="hero-sub">Manche permanent en verre recyclé. Têtes interchangeables biosourcées. Zéro compromis entre élégance et durabilité.</p>
       <div class="hero-acts">
-        <a href="#abonnement" class="btn-p">
+        <a href="#" class="btn-p" data-modal data-plan="">
           Découvrir nos offres
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </a>
@@ -468,7 +552,7 @@ footer{background:#080F1A;padding:96px 128px 64px}
         <div class="pf-row"><span class="pf-n">06</span><span class="pf-nm">Emballage recyclable</span><span class="pf-d">Zéro plastique · FSC</span></div>
       </div>
       <div class="prod-ctas rv d4">
-        <a href="#abonnement" class="btn-dk">Choisir mon abonnement <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+        <a href="#" class="btn-dk" data-modal data-plan="">Choisir mon abonnement <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
         <a href="#vid" class="btn-ol">Voir la vidéo de présentation</a>
       </div>
     </div>
@@ -569,7 +653,7 @@ footer{background:#080F1A;padding:96px 128px 64px}
         <li><span class="plan-ck"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg></span>Livraison offerte</li>
         <li><span class="plan-ck"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg></span>Sans engagement</li>
       </ul>
-      <a href="#" class="plan-btn">Commencer →</a>
+      <a href="#" class="plan-btn" data-modal data-plan="essentiel">Commencer →</a>
     </div>
     <div class="plan plan-feat rv d1">
       <div class="plan-tag">Le plus choisi</div>
@@ -585,7 +669,7 @@ footer{background:#080F1A;padding:96px 128px 64px}
         <li><span class="plan-ck"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg></span>Couleur au choix</li>
         <li><span class="plan-ck"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg></span>−10% économie duo</li>
       </ul>
-      <a href="#" class="plan-btn">Choisir le Duo →</a>
+      <a href="#" class="plan-btn" data-modal data-plan="duo">Choisir le Duo →</a>
     </div>
     <div class="plan rv d2">
       <div class="plan-tier">Premium</div>
@@ -599,7 +683,7 @@ footer{background:#080F1A;padding:96px 128px 64px}
         <li><span class="plan-ck"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg></span>Accès configurateur</li>
         <li><span class="plan-ck"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg></span>Livraison express offerte</li>
       </ul>
-      <a href="#" class="plan-btn">Tout inclus →</a>
+      <a href="#" class="plan-btn" data-modal data-plan="premium">Tout inclus →</a>
     </div>
   </div>
 </section>
@@ -622,7 +706,7 @@ footer{background:#080F1A;padding:96px 128px 64px}
     <h2 class="cta-hl rv d1">Commencez aujourd'hui.<br><em>La planète aussi.</em></h2>
     <p class="cta-sub rv d2">Un manche pour toujours. Un abonnement sans surprise. Un geste pour l'environnement.</p>
     <div class="cta-acts rv d3">
-      <a href="#abonnement" class="btn-p">Choisir mon abonnement <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+      <a href="#" class="btn-p" data-modal data-plan="">Choisir mon abonnement <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
       <a href="#produit" class="btn-g">En savoir plus</a>
     </div>
   </div>
@@ -687,6 +771,155 @@ window.addEventListener('scroll', () => {
   secs.forEach(s => { if (window.scrollY >= s.offsetTop - 160) cur = s.id; });
   nls.forEach(a => { a.classList.remove('active'); if (a.getAttribute('href') === '#' + cur) a.classList.add('active'); });
 }, { passive: true });
+
+// ══════════════════════════════════════
+// MODAL ABONNEMENT
+// ══════════════════════════════════════
+const PLANS = [
+  { id:'essentiel', tier:'Découverte', name:'Kit Essentiel',   price:'9,90€',  desc:'1 manche + 1 tête / 3 mois' },
+  { id:'duo',       tier:'Classique',  name:'Duo Familial',    price:'17,90€', desc:'2 manches + 2 têtes / 3 mois', popular:true },
+  { id:'premium',   tier:'Premium',    name:'Expérience Complète', price:'24,90€', desc:'Kit complet + dentifrice bio' }
+];
+const COLORS = [
+  { id:'cristal',  label:'Cristal',    hex:'#D6EAF5', text:'#fff' },
+  { id:'navy',     label:'Navy',       hex:'#1A3A5C', text:'#fff' },
+  { id:'forest',   label:'Forêt',      hex:'#2A5C3F', text:'#fff' },
+  { id:'rosé',     label:'Rosé',       hex:'#E8B4B8', text:'#fff' },
+  { id:'noir',     label:'Noir',       hex:'#1A1A1A', text:'#fff' },
+  { id:'sable',    label:'Sable',      hex:'#C8B89A', text:'#fff' }
+];
+
+let selPlan  = null;
+let selColor = null;
+let step     = 1;
+
+function openModal(planId) {
+  selPlan  = planId || null;
+  selColor = null;
+  step     = 1;
+  renderModal();
+  document.getElementById('subModal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeModal() {
+  document.getElementById('subModal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function renderModal() {
+  const body = document.getElementById('modalBody');
+  if (step === 3) {
+    body.innerHTML = `
+      <div class="modal-success">
+        <div class="success-icon"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg></div>
+        <div class="success-title">Abonnement confirmé !</div>
+        <p class="success-sub">Merci pour votre confiance. Vous recevrez un email de confirmation dans quelques instants.</p>
+        <div class="success-recap">
+          <div class="recap-row"><span>Formule</span><span>${PLANS.find(p=>p.id===selPlan).name}</span></div>
+          <div class="recap-row"><span>Prix</span><span>${PLANS.find(p=>p.id===selPlan).price} /mois</span></div>
+          <div class="recap-row"><span>Couleur manche</span><span style="display:flex;align-items:center;gap:8px"><span style="width:16px;height:16px;border-radius:50%;background:${COLORS.find(c=>c.id===selColor).hex};border:1px solid rgba(0,0,0,.1);display:inline-block"></span>${COLORS.find(c=>c.id===selColor).label}</span></div>
+          <div class="recap-row"><span>Livraison</span><span>Offerte</span></div>
+        </div>
+        <button class="btn-confirm" onclick="closeModal()">Fermer <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg></button>
+      </div>`;
+    return;
+  }
+
+  const planHTML = PLANS.map(p => `
+    <div class="mplan${selPlan===p.id?' selected':''}" onclick="selectPlan('${p.id}')">
+      ${p.popular?'<div class="mplan-pop">Le plus choisi</div>':''}
+      <div class="mplan-check"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg></div>
+      <div class="mplan-tier">${p.tier}</div>
+      <div class="mplan-name">${p.name}</div>
+      <div class="mplan-price">${p.price}<span class="mplan-per"> /mois</span></div>
+    </div>`).join('');
+
+  const colorHTML = COLORS.map(c => `
+    <div class="color-item">
+      <div class="color-opt${selColor===c.id?' selected':''}" style="background:${c.hex}" onclick="selectColor('${c.id}')" title="${c.label}"></div>
+      <div class="color-name">${c.label}</div>
+    </div>`).join('');
+
+  const summaryPlan  = selPlan  ? PLANS.find(p=>p.id===selPlan)   : null;
+  const summaryColor = selColor ? COLORS.find(c=>c.id===selColor)  : null;
+
+  body.innerHTML = `
+    <div class="modal-steps">
+      <div class="mstep${step>=1?' active':''}${step>1?' done':''}">
+        <div class="mstep-num">${step>1?'✓':'1'}</div> Formule
+      </div>
+      <div class="mstep-sep"></div>
+      <div class="mstep${step>=2?' active':''}">
+        <div class="mstep-num">2</div> Couleur
+      </div>
+    </div>
+
+    ${step===1?`
+      <div style="margin-bottom:24px">
+        <div style="font-size:13px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;color:var(--ink-60);margin-bottom:16px">Choisissez votre formule</div>
+        <div class="mplans">${planHTML}</div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-confirm" id="btnStep1" onclick="goStep2()" ${!selPlan?'disabled':''}>
+          Continuer — Choisir ma couleur
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+    `:`
+      <div class="color-section" style="margin-bottom:28px">
+        <div class="color-label">Choisissez la couleur de votre manche</div>
+        <div class="color-grid">${colorHTML}</div>
+      </div>
+      ${summaryPlan && summaryColor ? `
+      <div class="modal-summary">
+        <div class="summary-part">
+          <div class="summary-dot"></div>
+          <div><div class="summary-label">Formule</div><div class="summary-val">${summaryPlan.name} — ${summaryPlan.price}/mois</div></div>
+        </div>
+        <div class="summary-part">
+          <div class="summary-color-preview" style="background:${summaryColor.hex}"></div>
+          <div><div class="summary-label">Couleur</div><div class="summary-val">${summaryColor.label}</div></div>
+        </div>
+      </div>` : `<div style="height:16px"></div>`}
+      <div class="modal-footer">
+        <button class="btn-modal-back" onclick="goStep1()">← Retour</button>
+        <button class="btn-confirm" onclick="goConfirm()" ${!selColor?'disabled':''}>
+          Confirmer mon abonnement
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>
+        </button>
+      </div>
+    `}`;
+}
+
+function selectPlan(id)  { selPlan=id;  renderModal(); }
+function selectColor(id) { selColor=id; renderModal(); }
+function goStep2() { if(selPlan)  { step=2; renderModal(); } }
+function goStep1() { step=1; renderModal(); }
+function goConfirm() { if(selColor) { step=3; renderModal(); } }
+
+// Bind all CTA buttons
+document.addEventListener('click', e => {
+  const btn = e.target.closest('[data-modal]');
+  if (btn) { e.preventDefault(); openModal(btn.dataset.plan||null); }
+  if (e.target.closest('#subModal .modal-overlay-bg')) closeModal();
+});
+document.addEventListener('keydown', e => { if(e.key==='Escape') closeModal(); });
+document.getElementById('subModal').addEventListener('click', e => {
+  if (e.target === document.getElementById('subModal')) closeModal();
+});
 </script>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="subModal">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="modal-title">Mon abonnement,<br><em>mon choix.</em></div>
+      <button class="modal-close" onclick="closeModal()" aria-label="Fermer">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <div class="modal-body" id="modalBody"></div>
+  </div>
+</div>
 </body>
 </html>
