@@ -390,12 +390,23 @@ footer{background:#080F1A;padding:96px 128px 64px}
 .recap-row span:first-child{color:var(--ink-60)}
 .recap-row span:last-child{font-weight:700;color:var(--ink)}
 
+/* Color step layout */
+.color-step-layout{display:grid;grid-template-columns:1fr 1.2fr;gap:32px;align-items:start}
+.brush-preview-wrap{display:flex;flex-direction:column;align-items:center;gap:16px;position:sticky;top:0}
+.brush-preview-bg{background:var(--sand);border-radius:24px;width:100%;aspect-ratio:3/4;display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative}
+.brush-preview-bg::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,transparent 60%,rgba(243,238,231,.5) 100%);pointer-events:none}
+#brushPreview{max-width:85%;max-height:85%;object-fit:contain;filter:none;transition:filter .4s ease;filter:drop-shadow(0 12px 32px rgba(12,26,46,.12))}
+.brush-preview-label{font-size:13px;font-weight:700;color:var(--ink-60);letter-spacing:.5px;text-align:center;min-height:20px;transition:opacity .2s}
+.color-picker-col{display:flex;flex-direction:column}
+
 @media(max-width:640px){
   .modal-head,.modal-body{padding-left:24px;padding-right:24px}
   .modal-head{padding-top:28px}
   .mplans{grid-template-columns:1fr}
   .modal-title{font-size:26px}
   .modal-footer{flex-direction:column}
+  .color-step-layout{grid-template-columns:1fr}
+  .brush-preview-bg{aspect-ratio:16/9}
 }
 </style>
 </head>
@@ -781,12 +792,12 @@ const PLANS = [
   { id:'premium',   tier:'Premium',    name:'Expérience Complète', price:'24,90€', desc:'Kit complet + dentifrice bio' }
 ];
 const COLORS = [
-  { id:'cristal',  label:'Cristal',    hex:'#D6EAF5', text:'#fff' },
-  { id:'navy',     label:'Navy',       hex:'#1A3A5C', text:'#fff' },
-  { id:'forest',   label:'Forêt',      hex:'#2A5C3F', text:'#fff' },
-  { id:'rosé',     label:'Rosé',       hex:'#E8B4B8', text:'#fff' },
-  { id:'noir',     label:'Noir',       hex:'#1A1A1A', text:'#fff' },
-  { id:'sable',    label:'Sable',      hex:'#C8B89A', text:'#fff' }
+  { id:'cristal', label:'Cristal', hex:'#C8E6F5', filter:'brightness(1.15) saturate(0.4) hue-rotate(185deg)' },
+  { id:'navy',    label:'Navy',    hex:'#1A3A5C', filter:'sepia(1) saturate(6) hue-rotate(185deg) brightness(0.45)' },
+  { id:'forest',  label:'Forêt',   hex:'#2A5C3F', filter:'sepia(1) saturate(6) hue-rotate(90deg) brightness(0.45)' },
+  { id:'rose',    label:'Rosé',    hex:'#E8A0A8', filter:'sepia(1) saturate(4) hue-rotate(295deg) brightness(1.1)' },
+  { id:'noir',    label:'Noir',    hex:'#222222', filter:'grayscale(1) brightness(0.18)' },
+  { id:'sable',   label:'Sable',   hex:'#C8A87A', filter:'sepia(0.85) saturate(2.5) hue-rotate(15deg) brightness(1.05)' }
 ];
 
 let selPlan  = null;
@@ -808,16 +819,21 @@ function closeModal() {
 
 function renderModal() {
   const body = document.getElementById('modalBody');
+  const modal = document.querySelector('.modal');
+
   if (step === 3) {
+    modal.style.maxWidth = '560px';
+    const c = COLORS.find(c=>c.id===selColor);
+    const p = PLANS.find(p=>p.id===selPlan);
     body.innerHTML = `
       <div class="modal-success">
         <div class="success-icon"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg></div>
         <div class="success-title">Abonnement confirmé !</div>
         <p class="success-sub">Merci pour votre confiance. Vous recevrez un email de confirmation dans quelques instants.</p>
         <div class="success-recap">
-          <div class="recap-row"><span>Formule</span><span>${PLANS.find(p=>p.id===selPlan).name}</span></div>
-          <div class="recap-row"><span>Prix</span><span>${PLANS.find(p=>p.id===selPlan).price} /mois</span></div>
-          <div class="recap-row"><span>Couleur manche</span><span style="display:flex;align-items:center;gap:8px"><span style="width:16px;height:16px;border-radius:50%;background:${COLORS.find(c=>c.id===selColor).hex};border:1px solid rgba(0,0,0,.1);display:inline-block"></span>${COLORS.find(c=>c.id===selColor).label}</span></div>
+          <div class="recap-row"><span>Formule</span><span>${p.name}</span></div>
+          <div class="recap-row"><span>Prix</span><span>${p.price} /mois</span></div>
+          <div class="recap-row"><span>Couleur manche</span><span style="display:flex;align-items:center;gap:8px"><span style="width:16px;height:16px;border-radius:50%;background:${c.hex};border:1px solid rgba(0,0,0,.1);display:inline-block"></span>${c.label}</span></div>
           <div class="recap-row"><span>Livraison</span><span>Offerte</span></div>
         </div>
         <button class="btn-confirm" onclick="closeModal()">Fermer <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg></button>
@@ -836,25 +852,22 @@ function renderModal() {
 
   const colorHTML = COLORS.map(c => `
     <div class="color-item">
-      <div class="color-opt${selColor===c.id?' selected':''}" style="background:${c.hex}" onclick="selectColor('${c.id}')" title="${c.label}"></div>
+      <div class="color-opt${selColor===c.id?' selected':''}" style="background:${c.hex}" data-color-id="${c.id}" onclick="selectColor('${c.id}')" title="${c.label}"></div>
       <div class="color-name">${c.label}</div>
     </div>`).join('');
 
-  const summaryPlan  = selPlan  ? PLANS.find(p=>p.id===selPlan)   : null;
-  const summaryColor = selColor ? COLORS.find(c=>c.id===selColor)  : null;
+  const curFilter = selColor ? COLORS.find(c=>c.id===selColor).filter : 'none';
+  const summaryPlan  = selPlan  ? PLANS.find(p=>p.id===selPlan)  : null;
+  const summaryColor = selColor ? COLORS.find(c=>c.id===selColor) : null;
 
-  body.innerHTML = `
-    <div class="modal-steps">
-      <div class="mstep${step>=1?' active':''}${step>1?' done':''}">
-        <div class="mstep-num">${step>1?'✓':'1'}</div> Formule
+  if (step === 1) {
+    modal.style.maxWidth = '760px';
+    body.innerHTML = `
+      <div class="modal-steps">
+        <div class="mstep active"><div class="mstep-num">1</div> Formule</div>
+        <div class="mstep-sep"></div>
+        <div class="mstep"><div class="mstep-num">2</div> Couleur</div>
       </div>
-      <div class="mstep-sep"></div>
-      <div class="mstep${step>=2?' active':''}">
-        <div class="mstep-num">2</div> Couleur
-      </div>
-    </div>
-
-    ${step===1?`
       <div style="margin-bottom:24px">
         <div style="font-size:13px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;color:var(--ink-60);margin-bottom:16px">Choisissez votre formule</div>
         <div class="mplans">${planHTML}</div>
@@ -864,35 +877,98 @@ function renderModal() {
           Continuer — Choisir ma couleur
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </button>
+      </div>`;
+  } else {
+    modal.style.maxWidth = '900px';
+    body.innerHTML = `
+      <div class="modal-steps">
+        <div class="mstep done"><div class="mstep-num">✓</div> Formule</div>
+        <div class="mstep-sep"></div>
+        <div class="mstep active"><div class="mstep-num">2</div> Couleur</div>
       </div>
-    `:`
-      <div class="color-section" style="margin-bottom:28px">
-        <div class="color-label">Choisissez la couleur de votre manche</div>
-        <div class="color-grid">${colorHTML}</div>
-      </div>
-      ${summaryPlan && summaryColor ? `
-      <div class="modal-summary">
-        <div class="summary-part">
-          <div class="summary-dot"></div>
-          <div><div class="summary-label">Formule</div><div class="summary-val">${summaryPlan.name} — ${summaryPlan.price}/mois</div></div>
+      <div class="color-step-layout">
+        <div class="brush-preview-wrap">
+          <div class="brush-preview-bg">
+            <img id="brushPreview" src="${document.getElementById('productImg').src}" alt="Aperçu brosse" style="filter:${curFilter};transition:filter .45s ease" />
+          </div>
+          <div class="brush-preview-label" id="previewLabel">${selColor ? COLORS.find(c=>c.id===selColor).label : 'Choisissez une couleur'}</div>
         </div>
-        <div class="summary-part">
-          <div class="summary-color-preview" style="background:${summaryColor.hex}"></div>
-          <div><div class="summary-label">Couleur</div><div class="summary-val">${summaryColor.label}</div></div>
+        <div class="color-picker-col">
+          <div class="color-label">Couleur du manche</div>
+          <div class="color-grid">${colorHTML}</div>
+          ${summaryPlan && summaryColor ? `
+          <div class="modal-summary" style="margin-top:20px">
+            <div class="summary-part">
+              <div class="summary-dot"></div>
+              <div><div class="summary-label">Formule</div><div class="summary-val">${summaryPlan.name}</div></div>
+            </div>
+            <div class="summary-part">
+              <div class="summary-color-preview" style="background:${summaryColor.hex}"></div>
+              <div><div class="summary-label">Couleur</div><div class="summary-val">${summaryColor.label}</div></div>
+            </div>
+          </div>` : `<div style="height:8px"></div>`}
+          <div class="modal-footer" style="margin-top:16px">
+            <button class="btn-modal-back" onclick="goStep1()">← Retour</button>
+            <button class="btn-confirm" id="btnConfirm" onclick="goConfirm()" ${!selColor?'disabled':''}>
+              Confirmer
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>
+            </button>
+          </div>
         </div>
-      </div>` : `<div style="height:16px"></div>`}
-      <div class="modal-footer">
-        <button class="btn-modal-back" onclick="goStep1()">← Retour</button>
-        <button class="btn-confirm" onclick="goConfirm()" ${!selColor?'disabled':''}>
-          Confirmer mon abonnement
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>
-        </button>
-      </div>
-    `}`;
+      </div>`;
+  }
 }
 
-function selectPlan(id)  { selPlan=id;  renderModal(); }
-function selectColor(id) { selColor=id; renderModal(); }
+function selectPlan(id) {
+  selPlan = id;
+  // Update UI without full re-render
+  document.querySelectorAll('.mplan').forEach(el => el.classList.remove('selected'));
+  document.querySelector(`.mplan[onclick="selectPlan('${id}')"]`).classList.add('selected');
+  const btn = document.getElementById('btnStep1');
+  if (btn) btn.disabled = false;
+}
+
+function selectColor(id) {
+  selColor = id;
+  // Update image filter instantly (no re-render = no flicker)
+  const preview = document.getElementById('brushPreview');
+  const color = COLORS.find(c => c.id === id);
+  if (preview) preview.style.filter = color.filter;
+  // Update label
+  const lbl = document.getElementById('previewLabel');
+  if (lbl) lbl.textContent = color.label;
+  // Update selected dot
+  document.querySelectorAll('.color-opt').forEach(el => el.classList.remove('selected'));
+  const dot = document.querySelector(`[data-color-id="${id}"]`);
+  if (dot) dot.classList.add('selected');
+  // Update summary
+  const sumColor = document.querySelector('.summary-color-preview');
+  const sumVal   = document.querySelectorAll('.summary-val');
+  if (sumColor) {
+    sumColor.style.background = color.hex;
+    if (sumVal[1]) sumVal[1].textContent = color.label;
+  } else {
+    // Summary not yet rendered — update whole right col
+    const summaryPlan = PLANS.find(p=>p.id===selPlan);
+    const summaryDiv  = document.querySelector('.color-picker-col');
+    if (summaryDiv) {
+      const old = summaryDiv.querySelector('.modal-summary');
+      const footer = summaryDiv.querySelector('.modal-footer');
+      const newSum = document.createElement('div');
+      newSum.className = 'modal-summary';
+      newSum.style.marginTop = '20px';
+      newSum.innerHTML = `
+        <div class="summary-part"><div class="summary-dot"></div><div><div class="summary-label">Formule</div><div class="summary-val">${summaryPlan.name}</div></div></div>
+        <div class="summary-part"><div class="summary-color-preview" style="background:${color.hex}"></div><div><div class="summary-label">Couleur</div><div class="summary-val">${color.label}</div></div></div>`;
+      if (old) old.replaceWith(newSum);
+      else summaryDiv.insertBefore(newSum, footer);
+    }
+  }
+  // Enable confirm button
+  const btn = document.getElementById('btnConfirm');
+  if (btn) btn.disabled = false;
+}
+
 function goStep2() { if(selPlan)  { step=2; renderModal(); } }
 function goStep1() { step=1; renderModal(); }
 function goConfirm() { if(selColor) { step=3; renderModal(); } }
